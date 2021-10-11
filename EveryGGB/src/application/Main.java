@@ -1,35 +1,74 @@
 package application;
 	
+import java.io.IOException;
+
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
-
 public class Main extends Application {
+	private Stage primaryStage;
+	private AnchorPane mainLayoutAnchorPane;
+	
+	private ObservableList<TableViewModel> transactionData = FXCollections.observableArrayList();
+	
 	@Override
 	public void start(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		this.primaryStage.setTitle("ì—ë¸Œë¦¬ê°€ê³„ë¶€");
+		
+		initRootLayout();
+		
+		showTransactionOverview();
+	}
+	
+	public void initRootLayout() {
 		try {
-			// FXML layout loader
+			// FXML layout loader	fxml íŒŒì¼ì—ì„œ ìƒìœ„ ë ˆì´ì•„ì›ƒì„ ê°€ì ¸ì˜¨ë‹¤.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("MainView.fxml"));
+			mainLayoutAnchorPane = (AnchorPane) loader.load();
 			
-			// widow root
-			AnchorPane mainLayoutAnchorPane = (AnchorPane) loader.load();
+			// ìƒìœ„ ë ˆì´ì•„ì›ƒì„ í¬í•¨í•˜ëŠ” sceneì„ ë³´ì—¬ì¤€ë‹¤.
 			Scene scene = new Scene(mainLayoutAnchorPane);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			
-			primaryStage.setTitle("¿¡ºê¸®°¡°èºÎ");
-			primaryStage.setResizable(false);	// À©µµ¿ì Ã¢ Å©±â º¯°æ ºÒ°¡
+			primaryStage.setResizable(false);	// ìœˆë„ìš° ì°½ í¬ê¸° ë³€ê²½ ë¶ˆê°€
 			primaryStage.setScene(scene);
-			primaryStage.show();	// À©µµ¿ì º¸¿©ÁÖ±â
-		} catch(Exception e) {
+			primaryStage.show();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public void showTransactionOverview() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("MainView.fxml"));
+			AnchorPane TransactionOverview = (AnchorPane) loader.load();
+			
+			TableController controller = loader.getController();
+			controller.setMain(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+	
+	public Main() {
+		transactionData.add(new TableViewModel("1", "2", "3", "4", "5", "6"));
+	}
+	
+	public ObservableList<TableViewModel> getTransactionData() {
+		return transactionData;
+	}
+	
 	public static void main(String[] args) {
-		launch(args);	// Main °´Ã¼ »ı¼º ¹× ¸ŞÀÎ À©µµ¿ì »ı¼º
+		launch(args);	// Main ê°ì²´ ìƒì„± ë° ë©”ì¸ ìœˆë„ìš° ìƒì„±
 	}
 }
