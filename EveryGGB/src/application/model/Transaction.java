@@ -5,12 +5,12 @@ import javafx.beans.property.StringProperty;
 
 public class Transaction {
 
-    private StringProperty Date;
-    private StringProperty Name;
-    private StringProperty Category;
-    private SimpleStringProperty IncomeOrExpense;
-	private SimpleStringProperty Balance;
-	private SimpleStringProperty Amount;
+    private final StringProperty Date;
+    private final StringProperty Name;
+    private final StringProperty Category;
+    private final StringProperty IncomeOrExpense;
+	private final StringProperty Balance;
+	private final StringProperty Amount;
 
     public Transaction() {
         this(null, null, null, null, null, null);

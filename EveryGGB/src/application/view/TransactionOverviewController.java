@@ -22,6 +22,15 @@ public class TransactionOverviewController {
     private TableColumn<Transaction, String> BalanceColumn;
     @FXML
     private TableColumn<Transaction, String> AmountColumn;
+    
+    @FXML
+    private Label ACCOUNT_HOLDER_NAME_Label;
+    @FXML
+    private Label BANK_NAME_Label;
+    @FXML
+    private Label ACCOUNT_NUM_Label;
+    @FXML
+    private Label BALANCE_AMT_Label;
 
     private MainApp mainApp;
 
@@ -30,6 +39,7 @@ public class TransactionOverviewController {
 
     @FXML
     private void initialize() {
+    	// 테이블 초기화
     	DateColumn.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
         NameColumn.setCellValueFactory(cellData -> cellData.getValue().NameProperty());
         CategoryColumn.setCellValueFactory(cellData -> cellData.getValue().CategoryProperty());
@@ -42,5 +52,15 @@ public class TransactionOverviewController {
         this.mainApp = mainApp;
 
         transactionTable.setItems(mainApp.getTransactionData());
+    }
+    
+    @FXML
+    private void handleToken() {
+    	mainApp.showTokenDialog();
+    }
+    
+    @FXML
+    private void handleToken2() {
+    	mainApp.showTokenInquiry();
     }
 }

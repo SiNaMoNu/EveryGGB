@@ -9,8 +9,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import application.model.Transaction;
+import application.view.TokenDialogController;
+import application.view.TokenInquiryController;
 import application.view.TransactionOverviewController;
 
 public class MainApp extends Application {
@@ -57,9 +60,9 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/TransactionOverview.fxml"));
-            AnchorPane personOverview = (AnchorPane) loader.load();
+            AnchorPane transactionOverview = (AnchorPane) loader.load();
 
-            rootLayout.setCenter(personOverview);
+            rootLayout.setCenter(transactionOverview);
 
             TransactionOverviewController controller = loader.getController();
             controller.setMainApp(this);
@@ -67,6 +70,57 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public boolean showTokenDialog() {
+    	try {
+    		FXMLLoader loader = new FXMLLoader();
+    		loader.setLocation(MainApp.class.getResource("view/TokenDialog.fxml"));
+    		AnchorPane page = (AnchorPane) loader.load();
+    		
+    		Stage dialogStage = new Stage();
+    		dialogStage.setTitle("Token");
+    		dialogStage.initModality(Modality.WINDOW_MODAL);
+    		dialogStage.initOwner(primaryStage);
+    		Scene scene = new Scene(page);
+    		dialogStage.setScene(scene);
+    		
+    		TokenDialogController controller = loader.getController();
+    		controller.setDialogStage(dialogStage);
+    		
+    		dialogStage.showAndWait();
+    		
+    		return controller.isOkClicked();
+    	} catch(IOException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    }
+    
+    public boolean showTokenInquiry() {
+    	try {
+    		FXMLLoader loader = new FXMLLoader();
+    		loader.setLocation(MainApp.class.getResource("view/TokenInquiry.fxml"));
+    		AnchorPane page = (AnchorPane) loader.load();
+    		
+    		Stage dialogStage = new Stage();
+    		dialogStage.setTitle("Token Information");
+    		dialogStage.initModality(Modality.WINDOW_MODAL);
+    		dialogStage.initOwner(primaryStage);
+    		Scene scene = new Scene(page);
+    		dialogStage.setScene(scene);
+    		
+    		TokenInquiryController controller = loader.getController();
+    		controller.setDialogStage(dialogStage);
+    		controller.setTokenInformation();
+    		
+    		dialogStage.showAndWait();
+    		
+    		return controller.isOkClicked();
+    	} catch(IOException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
     }
 
     public Stage getPrimaryStage() {
