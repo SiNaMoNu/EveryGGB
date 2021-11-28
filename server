@@ -1,0 +1,74 @@
+import java.io.*;
+import java.net.*;
+public class Client{
+	Socket requestSocket;
+	ObjectOutputStream out;
+ 	ObjectInputStream in;
+ 	String message;
+	String SrvMsg;
+	Client(){}
+	void run()
+	{
+		try{
+			//1. creating a socket to connect to the server
+			requestSocket = new Socket("1.201.151.37", 2004);
+			System.out.println("Connected to localhost in port 2004");
+
+			//2. get Input and Output streams
+			out = new ObjectOutputStream(requestSocket.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(requestSocket.getInputStream());
+			BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+			
+
+			//3: Communicating with the server
+			do{
+				try{
+					SrvMsg = (String)in.readObject();
+					System.out.println("server>" + SrvMsg);
+
+					sendMessage("Hi my server");
+					message = bf.readLine(); //String
+					sendMessage(message);
+				}
+				catch(ClassNotFoundException classNot){
+					System.err.println("data received in unknown format");
+				}
+			}while(!message.equals("finish"));
+		}
+		catch(UnknownHostException unknownHost){
+			System.err.println("You are trying to connect to an unknown host!");
+		}
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+		finally{
+			//4: Closing connection
+			try{
+				in.close();
+				out.close();
+				requestSocket.close();
+			}
+			catch(IOException ioException){
+				ioException.printStackTrace();
+			}
+		}
+	}
+	void sendMessage(String msg)
+	{
+		try{
+			out.writeObject(msg);
+			out.flush();
+			System.out.println("client>" + msg);
+		}
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+	}
+	public static void main(String args[]) throws IOException
+	{
+		Client client = new Client();
+		client.run();
+	}
+}
+
