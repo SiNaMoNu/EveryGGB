@@ -128,7 +128,7 @@ public class TransactionOverviewController {
     }
     
     @FXML
-    private void handleToken2() {
-    	mainApp.showTokenInquiry();
+    private void handleLogin() {
+    	mainApp.showLogin();
     }
 }

@@ -61,7 +61,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Menu">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleToken2" text="Login" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleLogin" text="Login" />
                </items></Menu>
         </menus>
       </MenuBar>
