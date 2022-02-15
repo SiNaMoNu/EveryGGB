@@ -23,10 +23,9 @@ public class server_main {
 			in = new ObjectInputStream(connection.getInputStream());
 			
 			connectionFlag = connection.isConnected();
-			
+			key = in.readObject();
 			while(key.equals("OFF")) {
 				if(connectionFlag == true) {
-					key = in.readObject();
 					
 					switch(key) {
 					case "SUC":
