@@ -1,43 +1,52 @@
 import java.io.*;
 import java.net.*;
-public class Client{
-	Socket requestSocket;
+public class Server{
+	ServerSocket providerSocket;
+	Socket connection = null;
 	ObjectOutputStream out;
- 	ObjectInputStream in;
- 	String message;
-	String SrvMsg;
-	Client(){}
+	ObjectInputStream in;
+	String message;
+    String text;
+    byte[] b = new byte[1024];
+                    
+	Server(){}
 	void run()
 	{
 		try{
-			//1. creating a socket to connect to the server
-			requestSocket = new Socket("1.201.151.37", 2004);
-			System.out.println("Connected to localhost in port 2004");
-
-			//2. get Input and Output streams
-			out = new ObjectOutputStream(requestSocket.getOutputStream());
+			//1. creating a server socket
+			providerSocket = new ServerSocket(2004, 10);
+			//2. Wait for connection
+			System.out.println("Server is waiting for connection from client");
+			connection = providerSocket.accept();
+			System.out.println("Connection received from " + connection.getInetAddress().getHostName());
+			//3. get Input and Output streams
+			out = new ObjectOutputStream(connection.getOutputStream());
 			out.flush();
-			in = new ObjectInputStream(requestSocket.getInputStream());
-			BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-			
-
-			//3: Communicating with the server
+			in = new ObjectInputStream(connection.getInputStream());
+			sendMessage("Connection successful");
+            
+			//4. The two parts communicate via the input and output streams
 			do{
 				try{
-					SrvMsg = (String)in.readObject();
-					System.out.println("server>" + SrvMsg);
-
-					sendMessage("Hi my server");
-					message = bf.readLine(); //String
-					sendMessage(message);
+					FileInputStream input = new FileInputStream("C:/Users/hmaster/Documents/tk.txt");
+            
+                    message = (String)in.readObject();
+					System.out.println("client>" + message);
+                    input.read(b);
+                    text = new String(b);
+					input.close();
+                    
+                    if (message.equals("abc"))
+                    {
+                        sendMessage(text);
+                    }
+                    
+                    
 				}
-				catch(ClassNotFoundException classNot){
-					System.err.println("data received in unknown format");
+				catch(ClassNotFoundException classnot){
+					System.err.println("Data received in unknown format");
 				}
-			}while(!message.equals("finish"));
-		}
-		catch(UnknownHostException unknownHost){
-			System.err.println("You are trying to connect to an unknown host!");
+			}while(!message.equals("abc"));
 		}
 		catch(IOException ioException){
 			ioException.printStackTrace();
@@ -47,7 +56,7 @@ public class Client{
 			try{
 				in.close();
 				out.close();
-				requestSocket.close();
+				providerSocket.close();
 			}
 			catch(IOException ioException){
 				ioException.printStackTrace();
@@ -59,16 +68,18 @@ public class Client{
 		try{
 			out.writeObject(msg);
 			out.flush();
-			System.out.println("client>" + msg);
+			System.out.println("server>" + msg);
 		}
 		catch(IOException ioException){
 			ioException.printStackTrace();
 		}
 	}
-	public static void main(String args[]) throws IOException
+	public static void main(String args[])
 	{
-		Client client = new Client();
-		client.run();
+		Server server = new Server();
+		while(true){
+			server.run();
+			
+		}
 	}
 }
-
