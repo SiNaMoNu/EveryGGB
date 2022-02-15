@@ -6,42 +6,58 @@ public class Server{
 	ObjectOutputStream out;
 	ObjectInputStream in;
 	String message;
-    String text;
-    byte[] b = new byte[1024];
+        String text;
+        byte[] b = new byte[1024];
                     
 	Server(){}
 	void run()
 	{
 		try{
-			//1. creating a server socket
 			providerSocket = new ServerSocket(2004, 10);
-			//2. Wait for connection
 			System.out.println("Server is waiting for connection from client");
 			connection = providerSocket.accept();
 			System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-			//3. get Input and Output streams
+			
+			//get Input and Output streams
 			out = new ObjectOutputStream(connection.getOutputStream());
 			out.flush();
 			in = new ObjectInputStream(connection.getInputStream());
 			sendMessage("Connection successful");
             
-			//4. The two parts communicate via the input and output streams
+			//The two parts communicate via the input and output streams
 			do{
 				try{
-					FileInputStream input = new FileInputStream("C:/Users/hmaster/Documents/tk.txt");
-            
-                    message = (String)in.readObject();
+					if (message.equals("SUC"))
+                    			{
+                        			sendMessage(text);
+                    			}
+					if (message.equals("SUR"))
+                    			{
+                        			sendMessage(text);
+                    			}
+					if (message.equals("SUU"))
+                    			{
+                        			sendMessage(text);
+                    			}
+					if (message.equals("SUD"))
+                    			{
+                        			sendMessage(text);
+                    			}
+					if (message.equals("abc"))
+                    			{
+                        			sendMessage(text);
+                    			}
+					FileInputStream input = new FileInputStream("C:/Users/user/tk.txt");            
+                                        message = (String)in.readObject();
 					System.out.println("client>" + message);
-                    input.read(b);
-                    text = new String(b);
+                                        input.read(b);
+                                        text = new String(b);
 					input.close();
                     
-                    if (message.equals("abc"))
-                    {
-                        sendMessage(text);
-                    }
-                    
-                    
+                    			if (message.equals("abc"))
+                    			{
+                        			sendMessage(text);
+                    			}
 				}
 				catch(ClassNotFoundException classnot){
 					System.err.println("Data received in unknown format");
@@ -63,6 +79,7 @@ public class Server{
 			}
 		}
 	}
+	
 	void sendMessage(String msg)
 	{
 		try{
@@ -74,6 +91,7 @@ public class Server{
 			ioException.printStackTrace();
 		}
 	}
+	
 	public static void main(String args[])
 	{
 		Server server = new Server();
